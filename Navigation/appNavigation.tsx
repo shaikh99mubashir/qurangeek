@@ -47,6 +47,7 @@ import {Base_Uri} from '../constant/BaseUri';
 import AttendedClassRecords from '../Screens/AttendedClassRecords';
 import ScheduleSuccessfully from '../Screens/ScheduleSuccessfully';
 import HomeIcon from '../SVGs/Home/index.tsx';
+import TestScreen from '../Screens/TestScreen/index.tsx';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -520,6 +521,11 @@ function AppNavigation() {
           options={{headerShown: false}}
           name="TutorDetails"
           component={TutorDetailForm}
+        />
+        <Stack.Screen
+          options={{headerShown: false}}
+          name="TestScreen"
+          component={TestScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

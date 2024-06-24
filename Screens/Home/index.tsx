@@ -38,6 +38,8 @@ import Money from '../../SVGs/Money';
 import Student from '../../SVGs/Student';
 import Clock from '../../SVGs/Clock';
 import Schedule from '../../SVGs/Schedule';
+import Pusher from 'pusher-js/react-native';
+import subscribeToChannel from '../../Component/subscribeToChannel';
 function Home({ navigation, route }: any) {
   let key = route.key;
 
@@ -510,6 +512,8 @@ function Home({ navigation, route }: any) {
       .get(`${Base_Uri}getScheduledHours/${tutorId}`)
       .then(({ data }) => {
         setScheduledHours(data.scheduledHours);
+        console.log('data.scheduledHours',data.scheduledHours);
+        
       })
       .catch(error => {
         ToastAndroid.show('Internal Server Error', ToastAndroid.SHORT);
@@ -550,6 +554,19 @@ function Home({ navigation, route }: any) {
         ToastAndroid.show('Internal Server Error', ToastAndroid.SHORT);
       });
   };
+
+  useEffect(() => {
+    const unsubscribe = subscribeToChannel({
+      channelName: 'tutor-offers',
+      eventName: 'App\\Events\\TutorOffers',
+      callback: (data:any) => {
+        console.log('Event received:', data);
+        getTutorStudents()
+      }
+    });
+
+    return unsubscribe; 
+  }, []);
 
   const getTutorSubjects = () => {
     axios
@@ -606,9 +623,53 @@ function Home({ navigation, route }: any) {
       getTutorStudents();
       getTutorSubjects();
       getCancelledHours();
-      getAssignedTicket();
     }
   }, [cummulativeCommission, refreshing, tutorId, focus]);
+
+  // useEffect(() => {
+  //   // Initialize Pusher
+  //   const pusher = new Pusher('fe0719382f9cae62f3f7', {
+  //     cluster: 'ap2',
+  //   //   encrypted: true, // Ensure encrypted is set to true for secure connections
+  //   });
+    
+    
+  //   // Subscribe to channel
+  //   const channel = pusher.subscribe('mobile-home-page-updated');
+
+  //   // Listen to events
+  //   channel.bind('App\\Events\\MobileHomePageUpdated', function(data:any) {
+  //     console.log('mobile-home-page-updated Event received:', data);
+  //     getAttendedHours();
+  //     getScheduledHours();
+  //     getCummulativeCommission()
+  //     // Handle the event data as needed
+  //   });
+
+  //   return () => {
+  //     // Clean up (unsubscribe) when component unmounts
+  //     // channel.unbind();
+  //     // pusher.disconnect();
+  //     channel.unbind_all();
+  //     pusher.unsubscribe('mobile-home-page-updated');
+  //     pusher.disconnect();
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToChannel({
+      channelName: 'mobile-home-page-updated',
+      eventName: 'App\\Events\\MobileHomePageUpdated',
+      callback: (data:any) => {
+        console.log('Event received:', data);
+        getAttendedHours();
+        getScheduledHours();
+        getCummulativeCommission()
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   const routeToScheduleScreen = async (item: any) => {
     interface LoginAuth {

@@ -34,6 +34,8 @@ import Status from '../Status';
 import filterContext from '../../context/filterContext';
 import CustomLoader from '../../Component/CustomLoader';
 import BackToDashboard from '../../Component/BackToDashboard';
+import Pusher from 'pusher-js/react-native';
+import subscribeToChannel from '../../Component/subscribeToChannel';
 interface LoginAuth {
   status: Number;
   tutorID: Number;
@@ -98,7 +100,7 @@ function JobTicket({navigation, route}: any) {
   const onRefresh = React.useCallback(() => {
     if (!refreshing) {
       // setRefreshing(true);
-      setLoading(true);
+      // setLoading(true);
       setTimeout(() => {
         setRefreshing(false);
         setOpenPPModal(true);
@@ -392,19 +394,19 @@ function JobTicket({navigation, route}: any) {
 
   useEffect(() => {
     if (tutorId) {
-      setLoading(true);
+      // setLoading(true);
       checkTutorStatus();
       getTicketsData();
       getAppliedData();
 
-      const intervalId = setInterval(() => {
-        checkTutorStatus();
-        getTicketsData();
-        getAppliedData();
-      }, 30000); // 60000 milliseconds = 1 minute
+      // const intervalId = setInterval(() => {
+      //   checkTutorStatus();
+      //   getTicketsData();
+      //   getAppliedData();
+      // }, 30000); // 60000 milliseconds = 1 minute
 
-      // Clean up the interval when the component unmounts or dependencies change
-      return () => clearInterval(intervalId);
+      // // Clean up the interval when the component unmounts or dependencies change
+      // return () => clearInterval(intervalId);
     }
   }, [route, refresh, tutorId]);
 
@@ -463,6 +465,37 @@ function JobTicket({navigation, route}: any) {
     });
     setFoundName(filteredItems);
   };
+
+
+
+
+  useEffect(() => {
+    const unsubscribe = subscribeToChannel({
+      channelName: 'ticket-created',
+      eventName: 'App\\Events\\TicketCreated',
+      callback: (data:any) => {
+        console.log('Event received:', data);
+        getTicketsData();
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToChannel({
+      channelName: 'tutor-offers',
+      eventName: 'App\\Events\\TutorOffers',
+      callback: (data:any) => {
+        console.log('Event received:', data);
+        getAppliedData()
+        checkTutorStatus();
+      }
+    });
+
+    return unsubscribe; 
+  }, []);
+
 
   const renderOpenData: any = ({item}: any) => {
     return (
@@ -1267,9 +1300,9 @@ function JobTicket({navigation, route}: any) {
       />
 
       <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        // refreshControl={
+        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        // }
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled>
         <View style={{paddingHorizontal: 15, marginTop: 20}}>
