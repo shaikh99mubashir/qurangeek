@@ -34,7 +34,6 @@ import Status from '../Status';
 import filterContext from '../../context/filterContext';
 import CustomLoader from '../../Component/CustomLoader';
 import BackToDashboard from '../../Component/BackToDashboard';
-import Pusher from 'pusher-js/react-native';
 import subscribeToChannel from '../../Component/subscribeToChannel';
 interface LoginAuth {
   status: Number;
@@ -100,7 +99,7 @@ function JobTicket({navigation, route}: any) {
   const onRefresh = React.useCallback(() => {
     if (!refreshing) {
       // setRefreshing(true);
-      // setLoading(true);
+      setLoading(true);
       setTimeout(() => {
         setRefreshing(false);
         setOpenPPModal(true);
@@ -228,7 +227,8 @@ function JobTicket({navigation, route}: any) {
     // if(isVerified){
     //   setModalVisible(true)
     // }
-
+    console.log('tutorId====>',tutorId);
+    
     axios
       .get(`${Base_Uri}getTutorDetailByID/${tutorId}`)
       .then(({data}) => {
@@ -255,7 +255,8 @@ function JobTicket({navigation, route}: any) {
         };
         updateTutorDetails(details);
         if (
-          tutorDetailById[0].status.toLowerCase() == 'verified' &&
+          tutorDetailById[0].status.toLowerCase() == 'verified' 
+          &&
           tutorDetailById[0]?.open_dashboard != 'yes'
         ) {
           axios
@@ -271,7 +272,7 @@ function JobTicket({navigation, route}: any) {
       })
       .catch(error => {
         ToastAndroid.show(
-          'Internal Server Error getTutorDetailByID ',
+          'Internal Server Error getTutorDetailByID',
           ToastAndroid.SHORT,
         );
       });
@@ -394,7 +395,7 @@ function JobTicket({navigation, route}: any) {
 
   useEffect(() => {
     if (tutorId) {
-      // setLoading(true);
+      setLoading(true);
       checkTutorStatus();
       getTicketsData();
       getAppliedData();
@@ -409,6 +410,49 @@ function JobTicket({navigation, route}: any) {
       // return () => clearInterval(intervalId);
     }
   }, [route, refresh, tutorId]);
+
+  
+
+  useEffect(() => {
+    const unsubscribe = subscribeToChannel({
+      channelName: 'tutor-approved',
+      eventName: 'App\\Events\\TutorApproved',
+      callback: (data:any) => {
+        console.log('Event received:', data);
+        checkTutorStatus();
+      }
+    });
+
+    return unsubscribe;
+  }, [focus]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToChannel({
+      channelName: 'ticket-created',
+      eventName: 'App\\Events\\TicketCreated',
+      callback: (data:any) => {
+        console.log('Event received:', data);
+        checkTutorStatus();
+        getTicketsData();
+      }
+    });
+
+    return unsubscribe;
+  }, [focus]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToChannel({
+      channelName: 'tutor-offers',
+      eventName: 'App\\Events\\TutorOffers',
+      callback: (data:any) => {
+        console.log('Event received:', data);
+        getAppliedData()
+        checkTutorStatus();
+      }
+    });
+
+    return unsubscribe; 
+  }, [focus]);
 
   const HandelGoToDashboard = () => {
     setModalVisible(false);
@@ -466,37 +510,6 @@ function JobTicket({navigation, route}: any) {
     setFoundName(filteredItems);
   };
 
-
-
-
-  useEffect(() => {
-    const unsubscribe = subscribeToChannel({
-      channelName: 'ticket-created',
-      eventName: 'App\\Events\\TicketCreated',
-      callback: (data:any) => {
-        console.log('Event received:', data);
-        getTicketsData();
-      }
-    });
-
-    return unsubscribe;
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = subscribeToChannel({
-      channelName: 'tutor-offers',
-      eventName: 'App\\Events\\TutorOffers',
-      callback: (data:any) => {
-        console.log('Event received:', data);
-        getAppliedData()
-        checkTutorStatus();
-      }
-    });
-
-    return unsubscribe; 
-  }, []);
-
-
   const renderOpenData: any = ({item}: any) => {
     return (
       <>
@@ -541,7 +554,7 @@ function JobTicket({navigation, route}: any) {
                     // backgroundColor: '#298CFF33',
                     color: item.mode == 'online' ? Theme.darkGray : '#1FC07D',
                     backgroundColor:
-                      item.mode == 'online' ? '#BCC4C9' : Theme.jobticketBG,
+                      item.mode == 'online' ? '#a5d3c4' : Theme.jobticketBG,
                     fontFamily: 'Circular Std Medium',
                     paddingVertical: 5,
                     paddingHorizontal: 30,
@@ -1298,11 +1311,10 @@ function JobTicket({navigation, route}: any) {
         filter
         navigation={navigation}
       />
-
       <ScrollView
-        // refreshControl={
-        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        // }
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled>
         <View style={{paddingHorizontal: 15, marginTop: 20}}>

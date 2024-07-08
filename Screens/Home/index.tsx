@@ -38,7 +38,6 @@ import Money from '../../SVGs/Money';
 import Student from '../../SVGs/Student';
 import Clock from '../../SVGs/Clock';
 import Schedule from '../../SVGs/Schedule';
-import Pusher from 'pusher-js/react-native';
 import subscribeToChannel from '../../Component/subscribeToChannel';
 function Home({ navigation, route }: any) {
   let key = route.key;
@@ -512,8 +511,6 @@ function Home({ navigation, route }: any) {
       .get(`${Base_Uri}getScheduledHours/${tutorId}`)
       .then(({ data }) => {
         setScheduledHours(data.scheduledHours);
-        console.log('data.scheduledHours',data.scheduledHours);
-        
       })
       .catch(error => {
         ToastAndroid.show('Internal Server Error', ToastAndroid.SHORT);
@@ -554,19 +551,6 @@ function Home({ navigation, route }: any) {
         ToastAndroid.show('Internal Server Error', ToastAndroid.SHORT);
       });
   };
-
-  useEffect(() => {
-    const unsubscribe = subscribeToChannel({
-      channelName: 'tutor-offers',
-      eventName: 'App\\Events\\TutorOffers',
-      callback: (data:any) => {
-        console.log('Event received:', data);
-        getTutorStudents()
-      }
-    });
-
-    return unsubscribe; 
-  }, []);
 
   const getTutorSubjects = () => {
     axios
@@ -623,53 +607,24 @@ function Home({ navigation, route }: any) {
       getTutorStudents();
       getTutorSubjects();
       getCancelledHours();
+      getAssignedTicket();
     }
   }, [cummulativeCommission, refreshing, tutorId, focus]);
-
-  // useEffect(() => {
-  //   // Initialize Pusher
-  //   const pusher = new Pusher('fe0719382f9cae62f3f7', {
-  //     cluster: 'ap2',
-  //   //   encrypted: true, // Ensure encrypted is set to true for secure connections
-  //   });
-    
-    
-  //   // Subscribe to channel
-  //   const channel = pusher.subscribe('mobile-home-page-updated');
-
-  //   // Listen to events
-  //   channel.bind('App\\Events\\MobileHomePageUpdated', function(data:any) {
-  //     console.log('mobile-home-page-updated Event received:', data);
-  //     getAttendedHours();
-  //     getScheduledHours();
-  //     getCummulativeCommission()
-  //     // Handle the event data as needed
-  //   });
-
-  //   return () => {
-  //     // Clean up (unsubscribe) when component unmounts
-  //     // channel.unbind();
-  //     // pusher.disconnect();
-  //     channel.unbind_all();
-  //     pusher.unsubscribe('mobile-home-page-updated');
-  //     pusher.disconnect();
-  //   };
-  // }, []);
-
+  
   useEffect(() => {
     const unsubscribe = subscribeToChannel({
       channelName: 'mobile-home-page-updated',
       eventName: 'App\\Events\\MobileHomePageUpdated',
       callback: (data:any) => {
         console.log('Event received:', data);
-        getAttendedHours();
+        // getAttendedHours();
         getScheduledHours();
         getCummulativeCommission()
       }
     });
 
     return unsubscribe;
-  }, []);
+  }, [focus]);
 
   const routeToScheduleScreen = async (item: any) => {
     interface LoginAuth {
@@ -1043,6 +998,9 @@ function Home({ navigation, route }: any) {
     getTutorDetailss();
   }, [focus,refreshing]);
 
+
+
+
   return (
     // return !cancelledHours ? (
     //   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -1257,6 +1215,11 @@ function Home({ navigation, route }: any) {
                       justifyContent: 'space-between',
                       marginVertical: 15,
                     }}>
+                    {/* <Image
+                      source={require('../../Assets/Images/money.png')}
+                      resizeMode="contain"
+                      style={{ marginTop: 5 }}
+                    /> */}
                     <Money/>
                     <Image
                       source={require('../../Assets/Images/DiagonalRightUparrow.png')}
@@ -1272,7 +1235,7 @@ function Home({ navigation, route }: any) {
                         styles.textType1,
                         { color: 'white', fontSize: 30, lineHeight: 40 },
                       ]}>
-                      RM {cummulativeCommission ? cummulativeCommission : '0.00'}
+                      $ {cummulativeCommission && cummulativeCommission}
                     </Text>
                     <Text
                       style={[
@@ -1362,7 +1325,7 @@ function Home({ navigation, route }: any) {
                         styles.textType1,
                         { fontSize: 30, lineHeight: 40 },
                       ]}>
-                      {attendedHours ? attendedHours : '0.0'}
+                      {attendedHours && attendedHours }
                     </Text>
                   </View>
                 </View>
@@ -1395,7 +1358,7 @@ function Home({ navigation, route }: any) {
                         styles.textType1,
                         { fontSize: 30, lineHeight: 40 },
                       ]}>
-                      {schedulesHours ? schedulesHours : '0.0'}
+                      {schedulesHours && schedulesHours }
                     </Text>
                   </View>
                 </View>

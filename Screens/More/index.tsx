@@ -482,7 +482,7 @@ function More({navigation}: any) {
             />
           </TouchableOpacity>
            {/*TestScreen */}
-           <TouchableOpacity
+           {/* <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => navigation.navigate('TestScreen')}
             style={{
@@ -526,7 +526,7 @@ function More({navigation}: any) {
               style={{width: 20, height: 20}}
               resizeMode="contain"
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {/*Logout */}
           <TouchableOpacity
             onPress={handleFilterPress}

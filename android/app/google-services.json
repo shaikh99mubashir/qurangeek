@@ -1,26 +1,94 @@
 {
   "project_info": {
-    "project_number": "913169229177",
-    "project_id": "qurangeek-c18f0",
-    "storage_bucket": "qurangeek-c18f0.appspot.com"
+    "project_number": "850415328193",
+    "project_id": "sifututorone",
+    "storage_bucket": "sifututorone.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:913169229177:android:9fd74ec11685ce5582bba8",
+        "mobilesdk_app_id": "1:850415328193:android:7c0a8f03415eddef992d40",
         "android_client_info": {
-          "package_name": "com.qurangeek"
+          "package_name": "com.nakanji"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "850415328193-14g6oeahdvi1labnjsvsuirhd4i0sv06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCw3C3HQ02_s5Sgk-qiqWIzro-x3JJVkLY"
+          "current_key": "AIzaSyBCHT1dHSMdORSjfKn6_QV3sGLSYzMjRrQ"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "850415328193-14g6oeahdvi1labnjsvsuirhd4i0sv06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850415328193:android:8067be034265667f992d40",
+        "android_client_info": {
+          "package_name": "com.qurangeek"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "850415328193-14g6oeahdvi1labnjsvsuirhd4i0sv06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCHT1dHSMdORSjfKn6_QV3sGLSYzMjRrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "850415328193-14g6oeahdvi1labnjsvsuirhd4i0sv06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850415328193:android:3e012d67a38bc32d992d40",
+        "android_client_info": {
+          "package_name": "com.tutor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "850415328193-14g6oeahdvi1labnjsvsuirhd4i0sv06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCHT1dHSMdORSjfKn6_QV3sGLSYzMjRrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "850415328193-14g6oeahdvi1labnjsvsuirhd4i0sv06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
