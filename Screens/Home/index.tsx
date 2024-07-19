@@ -617,9 +617,15 @@ function Home({ navigation, route }: any) {
       eventName: 'App\\Events\\MobileHomePageUpdated',
       callback: (data:any) => {
         console.log('Event received:', data);
-        // getAttendedHours();
-        getScheduledHours();
-        getCummulativeCommission()
+        if (tutorId && cummulativeCommission) {
+          getCummulativeCommission()
+          getAttendedHours();
+          getScheduledHours();
+          getTutorStudents();
+          getTutorSubjects();
+          getCancelledHours();
+          getAssignedTicket();
+        }
       }
     });
 

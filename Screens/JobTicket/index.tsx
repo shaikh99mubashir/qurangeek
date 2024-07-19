@@ -51,7 +51,7 @@ function JobTicket({navigation, route}: any) {
   let {jobTicketBanner, setJobTicketBanner} = bannerCont;
   let loginData: LoginAuth;
   const [isSearchItems, setIsSearchItems] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
   const tutor = useContext(TutorDetailsContext);
   const [modalVisible, setModalVisible] = useState(false);
@@ -395,7 +395,7 @@ function JobTicket({navigation, route}: any) {
 
   useEffect(() => {
     if (tutorId) {
-      setLoading(true);
+      // setLoading(true);
       checkTutorStatus();
       getTicketsData();
       getAppliedData();
@@ -1312,9 +1312,9 @@ function JobTicket({navigation, route}: any) {
         navigation={navigation}
       />
       <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        // refreshControl={
+        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        // }
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled>
         <View style={{paddingHorizontal: 15, marginTop: 20}}>
